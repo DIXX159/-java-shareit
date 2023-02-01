@@ -8,10 +8,8 @@ import ru.practicum.shareit.exception.ValidationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequestMapping(path = "/users")
 @RequiredArgsConstructor
@@ -19,10 +17,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @PostMapping
-    public User createUser(@RequestBody @Valid User user, HttpServletRequest request) throws ValidationException {
-        log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), user);
+    public User createUser(@RequestBody @Valid UserDto userDto, HttpServletRequest request) throws ValidationException {
+        log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), userDto);
+        User user = userMapper.toEntity(userDto);
         return userService.createUser(user);
     }
 
@@ -33,14 +33,18 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers(HttpServletRequest request) {
+    public List<UserDto> getAllUsers(HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        return userService.getAllUsers();
+        final List<User> users = userService.getAllUsers();
+        return users.stream()
+                .map(userMapper::toUserDto)
+                .collect(Collectors.toList());
     }
 
     @PatchMapping(value = "/{userId}")
-    public User updateUser(@RequestBody User user, HttpServletRequest request, @PathVariable Long userId) throws ValidationException {
-        log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), user);
+    public User updateUser(@RequestBody UserDto userDto, HttpServletRequest request, @PathVariable Long userId) throws ValidationException {
+        log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), userDto);
+        User user = userMapper.toEntity(userDto);
         return userService.updateUser(userId, user);
     }
 
