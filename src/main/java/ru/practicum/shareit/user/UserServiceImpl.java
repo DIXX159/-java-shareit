@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.Constants;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.exception.ThrowableException;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,17 +20,17 @@ public class UserServiceImpl implements UserService {
     List<String> email = new ArrayList<>();
 
     @Override
-    public User createUser(User user) throws ValidationException {
+    public User createUser(User user) throws ThrowableException {
         if (!email.contains(user.getEmail())) {
             email.add(user.getEmail());
             user.setId(userIdGenerator++);
             users.put(user.getId(), user);
             return user;
-        } else throw new ValidationException(Constants.emailExist);
+        } else throw new ThrowableException(Constants.emailExist);
     }
 
     @Override
-    public User updateUser(Long userId, User user) throws ValidationException {
+    public User updateUser(Long userId, User user) throws ThrowableException {
         if (users.get(userId) != null) {
             user.setId(userId);
             if (!email.contains(user.getEmail())) {
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
                 }
                 users.put(userId, user);
                 return users.get(userId);
-            } else throw new ValidationException(Constants.emailExist);
+            } else throw new ThrowableException(Constants.emailExist);
         } else throw new NotFoundException(Constants.userNotFound);
     }
 

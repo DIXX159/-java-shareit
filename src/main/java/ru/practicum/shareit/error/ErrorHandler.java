@@ -19,9 +19,9 @@ public class ErrorHandler {
     private static final Logger log = LoggerFactory.getLogger(ErrorHandler.class);
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse validationException(final ValidationException e) {
-        log.info("409 {}", e.getParameter());
+        log.info("400 {}", e.getParameter());
         return new ErrorResponse(e.getParameter());
     }
 
@@ -36,7 +36,7 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
-        log.info("409 {}", e.getMessage());
+        log.info("400 {}", e.getMessage());
         String[] errorString = e.getMessage().split(";");
         String shortErrorString = errorString[errorString.length - 1];
         String error = shortErrorString.substring(shortErrorString.indexOf('[') + 1, shortErrorString.indexOf(']'));
@@ -49,7 +49,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleThrowable(Throwable e) {
         return new ErrorResponse(
-                "Произошла непредвиденная ошибка."
+                e.getMessage()
         );
     }
 }

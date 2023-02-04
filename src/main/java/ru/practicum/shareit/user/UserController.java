@@ -3,7 +3,11 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.ThrowableException;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.model.UserDto;
+import ru.practicum.shareit.user.model.UserMapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -20,16 +24,16 @@ public class UserController {
     private final UserMapper userMapper;
 
     @PostMapping
-    public User createUser(@RequestBody @Valid UserDto userDto, HttpServletRequest request) throws ValidationException {
+    public User createUser(@RequestBody @Valid UserDto userDto, HttpServletRequest request) throws ValidationException, ThrowableException {
         log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), userDto);
         User user = userMapper.toEntity(userDto);
         return userService.createUser(user);
     }
 
-    @GetMapping(value = "/{id}")
-    public User getUserById(@PathVariable Long id, HttpServletRequest request) {
+    @GetMapping(value = "/{userId}")
+    public User getUserById(@PathVariable Long userId, HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        return userService.getUserById(id);
+        return userService.getUserById(userId);
     }
 
     @GetMapping
@@ -42,7 +46,7 @@ public class UserController {
     }
 
     @PatchMapping(value = "/{userId}")
-    public User updateUser(@RequestBody UserDto userDto, HttpServletRequest request, @PathVariable Long userId) throws ValidationException {
+    public User updateUser(@RequestBody UserDto userDto, HttpServletRequest request, @PathVariable Long userId) throws ValidationException, ThrowableException {
         log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), userDto);
         User user = userMapper.toEntity(userDto);
         return userService.updateUser(userId, user);
@@ -53,5 +57,4 @@ public class UserController {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
         userService.deleteUser(userId);
     }
-
 }

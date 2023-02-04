@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.model;
 
 public abstract class UserData<K> {
     protected K id;
