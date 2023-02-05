@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.practicum.shareit.Constants;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ThrowableException;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
@@ -20,20 +21,22 @@ public class UserServiceImpl implements UserService {
     List<String> email = new ArrayList<>();
 
     @Override
-    public User createUser(User user) throws ThrowableException {
-        if (!email.contains(user.getEmail())) {
-            email.add(user.getEmail());
-            user.setId(userIdGenerator++);
-            users.put(user.getId(), user);
-            return user;
-        } else throw new ThrowableException(Constants.emailExist);
+    public User createUser(User user) throws ThrowableException, ValidationException {
+        if (user.getEmail() != null) {
+            if (!email.contains(user.getEmail())) {
+                email.add(user.getEmail());
+                user.setId(userIdGenerator++);
+                users.put(user.getId(), user);
+                return user;
+            } else throw new ThrowableException(Constants.emailExist);
+        } else throw new ValidationException("Не указан e-mail");
     }
 
     @Override
     public User updateUser(Long userId, User user) throws ThrowableException {
         if (users.get(userId) != null) {
             user.setId(userId);
-            if (!email.contains(user.getEmail())) {
+            if (user.getEmail() == null || !email.contains(user.getEmail())) {
                 email.add(user.getEmail());
                 if (user.getEmail() != null) {
                     email.remove(users.get(userId).getEmail());

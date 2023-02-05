@@ -97,9 +97,10 @@ public class ItemServiceImpl implements ItemService {
         List<Item> searchingItems = new ArrayList<>();
         if (!text.isEmpty()) {
             for (long i = 1; i <= items.size(); i++) {
-                if (items.get(i).getAvailable() && items.get(i).getName().toLowerCase().contains(text.toLowerCase()) ||
-                        items.get(i).getAvailable() && items.get(i).getDescription().toLowerCase().contains(text.toLowerCase())) {
-                    searchingItems.add(items.get(i));
+                Item item = items.get(i);
+                if (item.getAvailable() && item.getName().toLowerCase().contains(text.toLowerCase()) ||
+                        item.getAvailable() && item.getDescription().toLowerCase().contains(text.toLowerCase())) {
+                    searchingItems.add(item);
                 }
             }
         }

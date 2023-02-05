@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PatchMapping(value = "/{userId}")
-    public User updateUser(@RequestBody UserDto userDto, HttpServletRequest request, @PathVariable Long userId) throws ValidationException, ThrowableException {
+    public User updateUser(@RequestBody @Valid UserDto userDto, HttpServletRequest request, @PathVariable Long userId) throws ValidationException, ThrowableException {
         log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), userDto);
         User user = userMapper.toEntity(userDto);
         return userService.updateUser(userId, user);

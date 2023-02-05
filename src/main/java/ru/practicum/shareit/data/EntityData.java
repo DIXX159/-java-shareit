@@ -1,9 +1,9 @@
-package ru.practicum.shareit.user.model;
+package ru.practicum.shareit.data;
 
-public abstract class UserData<K> {
+public abstract class EntityData<K> {
     protected K id;
 
-    public UserData() {
+    public EntityData() {
     }
 
     public K getId() {
@@ -19,10 +19,10 @@ public abstract class UserData<K> {
             return false;
         } else if (this == o) {
             return true;
-        } else if (!(o instanceof UserData)) {
+        } else if (!(o instanceof EntityData)) {
             return false;
         } else {
-            UserData that = (UserData) o;
+            EntityData that = (EntityData) o;
             if (!that.getClass().equals(this.getClass())) {
                 return false;
             } else {
