@@ -1,15 +1,16 @@
 package ru.practicum.shareit.user.model;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.Email;
+import java.io.Serializable;
 
-@Builder
-@Data
-public class UserDto {
-    private final Long id;
-    private final String name;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter @Setter
+public class UserDto implements Serializable {
+    private Long id;
+    private String name;
     @Email(message = "Не верный формат e-mail")
-    private final String email;
+    private String email;
 }

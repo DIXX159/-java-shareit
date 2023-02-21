@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @PostMapping
@@ -39,7 +40,7 @@ public class UserController {
     @GetMapping
     public List<UserDto> getAllUsers(HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        final List<User> users = userService.getAllUsers();
+        final List<User> users = userRepository.findAll();
         return users.stream()
                 .map(userMapper::toUserDto)
                 .collect(Collectors.toList());
