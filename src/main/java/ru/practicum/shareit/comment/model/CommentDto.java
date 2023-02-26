@@ -6,15 +6,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 public class CommentDto {
+    Long id;
+    @NotBlank(message = "Комментарий не должен быть пустым")
     private String text;
     private Long item;
-    private Long author;
-    private LocalDate created;
+    private String authorName;
+    private String created;
 }

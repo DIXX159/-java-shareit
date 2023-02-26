@@ -52,7 +52,6 @@ public class PersistenceConfig {
         final LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(dataSource);
         emf.setPackagesToScan("ru.practicum");
-
         final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         emf.setJpaVendorAdapter(vendorAdapter);
         emf.setJpaProperties(hibernateProperties());
@@ -66,6 +65,4 @@ public class PersistenceConfig {
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
     }
-
-
 }

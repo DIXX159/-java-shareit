@@ -1,18 +1,16 @@
 package ru.practicum.shareit.booking.model;
 
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.booking.enums.BookingStatus;
-import ru.practicum.shareit.data.EntityData;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bookings")
-@Getter @Setter
+@Getter
+@Setter
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

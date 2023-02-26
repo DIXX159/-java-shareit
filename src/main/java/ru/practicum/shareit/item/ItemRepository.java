@@ -6,19 +6,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    public Item findItemByOwner(Long userId);
+    Item findItemByNameAndDescription(String name, String description);
 
-    public Item findItemByNameAndDescription(String name, String description);
+    Optional<Item> findById(Long id);
 
-    public Item findItemById(Long id);
+    Item findItemByIdOrderById(Long id);
 
-    public List<Item> findAllByOwner(Long userId);
+    List<Item> findAllByOwnerOrderById(Long userId);
 
     @Transactional
     @Modifying
@@ -31,4 +31,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "where id = :id", nativeQuery = true)
     void updateItem(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("is_available") String available, @Param("owner_id") Long owner, @Param("request_id") Long request);
 
+    @Query(value = "select i.id, i.id, i.name, i.description, i.is_available, i.owner_id, i.request_id from items as i order by i.id", nativeQuery = true)
+    List<Item> findAllItems();
 }

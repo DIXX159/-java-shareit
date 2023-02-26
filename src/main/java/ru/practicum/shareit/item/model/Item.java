@@ -11,7 +11,8 @@ import javax.validation.constraints.Positive;
 
 @Entity
 @Table(name = "items")
-@Getter @Setter
+@Getter
+@Setter
 public class Item extends EntityData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request.model;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.booking.model.BookingDto;
 
 import javax.validation.Valid;
 

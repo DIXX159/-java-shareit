@@ -6,13 +6,12 @@ import ru.practicum.shareit.data.EntityData;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comments")
-@Getter @Setter
+@Getter
+@Setter
 public class Comment extends EntityData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,5 +25,5 @@ public class Comment extends EntityData {
     @Column(name = "author_id")
     private Long author;
     @Column(name = "created")
-    private LocalDate created;
+    private LocalDateTime created;
 }

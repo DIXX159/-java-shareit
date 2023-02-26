@@ -1,23 +1,28 @@
 package ru.practicum.shareit.item;
 
+import ru.practicum.shareit.comment.model.Comment;
+import ru.practicum.shareit.comment.model.CommentDto;
 import ru.practicum.shareit.exception.ThrowableException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.model.ItemDto;
 
 import java.util.List;
 
 public interface ItemService {
-    Item createItem(Item item, Long userId) throws Throwable;
+    ItemDto createItem(Item item, Long userId) throws Throwable;
 
-    Item updateItem(Long itemId, Item item, Long userId) throws ValidationException, ThrowableException;
+    ItemDto updateItem(Long itemId, ItemDto item, Long userId) throws ValidationException, ThrowableException;
 
-    List<Item> getAllItemsByUserId(Long userId);
+    List<ItemDto> getAllItemsByUserId(Long userId);
 
-    List<Item> getAllItems();
+    List<ItemDto> getAllItems();
 
-    Item getItemById(Long id);
+    ItemDto getItemById(Long id, Long userId);
 
-    List<Item> searchItem(String text);
+    List<ItemDto> searchItem(String text);
 
     void deleteItem(long userId);
+
+    CommentDto createComment(Comment comment, Long itemId, Long userId) throws ValidationException;
 }
