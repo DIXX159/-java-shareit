@@ -36,6 +36,8 @@ public class PersistenceConfig {
         Properties properties = new Properties();
         properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
         properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
+        properties.put("javax.persistence.schema-generation.create-script-source",
+                environment.getProperty("javax.persistence.schema-generation.create-script-source"));
         properties.put("javax.persistence.schema-generation.database.action",
                 environment.getProperty("javax.persistence.schema-generation.database.action", "none"));
         return properties;
