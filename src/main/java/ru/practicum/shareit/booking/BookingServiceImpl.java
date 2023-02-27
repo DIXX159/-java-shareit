@@ -86,10 +86,10 @@ public class BookingServiceImpl implements BookingService {
             return bookingMapper.mapToBooking2Dto(bookingRepository.findCurrentByBooker(userId, LocalDateTime.now()));
         }
         if (state.equals("FUTURE")) {
-            return bookingMapper.mapToBooking2Dto(bookingRepository.findFutureByBooker(userId, LocalDateTime.now().minusMinutes(3)));
+            return bookingMapper.mapToBooking2Dto(bookingRepository.findFutureByBooker(userId, LocalDateTime.now()));
         }
         if (state.equals("PAST")) {
-            return bookingMapper.mapToBooking2Dto(bookingRepository.findPastByBooker(userId, LocalDateTime.now().minusMinutes(1)));
+            return bookingMapper.mapToBooking2Dto(bookingRepository.findPastByBooker(userId, LocalDateTime.now()));
         }
         if (state.equals("WAITING") || state.equals("REJECTED")) {
             return bookingMapper.mapToBooking2Dto(bookingRepository.findAllBookingsByStatus(state, userId));
@@ -110,10 +110,10 @@ public class BookingServiceImpl implements BookingService {
                 return bookingMapper.mapToBooking2Dto(bookingRepository.findCurrentBookingsByItemsOwner(ownerId, LocalDateTime.now()));
             }
             if (state.equals("FUTURE")) {
-                return bookingMapper.mapToBooking2Dto(bookingRepository.findFutureBookingsByItemsOwner(ownerId, LocalDateTime.now().minusMinutes(3)));
+                return bookingMapper.mapToBooking2Dto(bookingRepository.findFutureBookingsByItemsOwner(ownerId, LocalDateTime.now()));
             }
             if (state.equals("PAST")) {
-                return bookingMapper.mapToBooking2Dto(bookingRepository.findPastBookingsByItemsOwner(ownerId, LocalDateTime.now().minusMinutes(1)));
+                return bookingMapper.mapToBooking2Dto(bookingRepository.findPastBookingsByItemsOwner(ownerId, LocalDateTime.now()));
             }
             if (state.equals("WAITING") || state.equals("REJECTED")) {
                 return bookingMapper.mapToBooking2Dto(bookingRepository.findAllBookingsByItemsOwnerStatus(ownerId, state));
