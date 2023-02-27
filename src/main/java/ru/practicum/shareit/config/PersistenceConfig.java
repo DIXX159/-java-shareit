@@ -1,6 +1,7 @@
 package ru.practicum.shareit.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +39,8 @@ public class PersistenceConfig {
         properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
         properties.put("javax.persistence.schema-generation.create-script-source",
                 environment.getProperty("javax.persistence.schema-generation.create-script-source"));
+        properties.put("javax.persistence.schema-generation.database.action",
+                environment.getProperty("javax.persistence.schema-generation.database.action", "none"));
         return properties;
     }
     /*   private Properties hibernateProperties() {
@@ -73,7 +76,8 @@ public class PersistenceConfig {
                 .build();
     }
 
-    @Bean
+    @Primary
+    @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         final LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(dataSource);
@@ -85,8 +89,9 @@ public class PersistenceConfig {
         return emf;
     }
 
-    @Bean
-    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    @Primary
+    @Bean(name = "transactionManager")
+    public JpaTransactionManager transactionManager(@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
