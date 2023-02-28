@@ -10,6 +10,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -28,15 +29,17 @@ public class UserServiceImpl implements UserService {
     public User updateUser(Long userId, User user) throws ThrowableException {
         if (userRepository.findUserById(userId) != null) {
             user.setId(userId);
-            if (user.getEmail() == null || !userRepository.findAllEmail().contains(user.getEmail())) {
+            User oldUser = userRepository.findUserById(userId);
+            if (user.getEmail() == null || !userRepository.findAllEmail().contains(user.getEmail()) || Objects.equals(oldUser.getEmail(), user.getEmail())) {
                 if (user.getEmail() == null) {
-                    user.setEmail(userRepository.findUserById(userId).getEmail());
+                    user.setEmail(oldUser.getEmail());
                 }
                 if (user.getName() == null) {
-                    user.setName(userRepository.findUserById(userId).getName());
+                    user.setName(oldUser.getName());
                 }
                 userRepository.updateUser(userId, user.getName(), user.getEmail());
-                return userRepository.findUserById(userId);
+                userRepository.saveAndFlush(user);
+                return userRepository.findUserById(user.getId());
             } else throw new ThrowableException(Constants.emailExist);
         } else throw new NotFoundException(Constants.userNotFound);
     }

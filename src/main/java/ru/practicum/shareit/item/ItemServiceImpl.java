@@ -52,7 +52,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto updateItem(Long itemId, ItemDto item, Long userId) throws ThrowableException {
+    public ItemDto updateItem(Long itemId, ItemDto itemDto, Long userId) throws ThrowableException {
+        Item item = itemMapper.toEntity(itemDto);
         if (userId > 0) {
             if (item.getId() == null) {
                 item.setId(itemId);
@@ -75,7 +76,8 @@ public class ItemServiceImpl implements ItemService {
                     item.setRequest(updateItem.getRequest());
                 }
                 itemRepository.updateItem(itemId, item.getName(), item.getDescription(), item.getAvailable().toString(), item.getOwner(), 0L);
-                return itemMapper.toItemDto(itemRepository.findItemByIdOrderById(itemId));
+                itemRepository.saveAndFlush(item);
+                return itemMapper.toItemDto(itemRepository.findItemByIdOrderById(updateItem.getId()));
             } else throw new NotFoundException("Пользователь не является владельцем");
         } else throw new ThrowableException(Constants.idNotFound);
     }

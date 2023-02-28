@@ -56,9 +56,12 @@ public class BookingServiceImpl implements BookingService {
             if (Objects.equals(item.getOwner(), ownerId)) {
                 if (Objects.equals(approved, "true")) {
                     bookingRepository.updateBooking(bookingId, "APPROVED");
+                    booking.setStatus(BookingStatus.APPROVED);
                 } else {
                     bookingRepository.updateBooking(bookingId, "REJECTED");
+                    booking.setStatus(BookingStatus.REJECTED);
                 }
+                bookingRepository.saveAndFlush(booking);
                 return bookingMapper.toBookingDto(bookingRepository.findBookingById(bookingId));
             } else throw new NotFoundException("Пользователь не является владельцем");
         } else throw new ValidationException("Бронирование уже одобрено");
