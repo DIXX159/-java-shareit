@@ -54,18 +54,18 @@ public class BookingMapper {
     }
 
     public List<Booking2Dto> mapToBooking2Dto(Iterable<Booking> bookings) {
-        List<Booking2Dto> Booking2Dto = new ArrayList<>();
+        List<Booking2Dto> booking2Dtos = new ArrayList<>();
         for (Booking booking : bookings) {
-            Booking2Dto.add(toBookingDto(booking));
+            booking2Dtos.add(toBookingDto(booking));
         }
-        return Booking2Dto;
+        return booking2Dtos;
     }
 
     public List<Booking2ItemDto> mapToItemBooking2Dto(Iterable<Booking> bookings) {
-        List<Booking2ItemDto> Booking2ItemDto = new ArrayList<>();
+        List<Booking2ItemDto> booking2ItemDtos = new ArrayList<>();
         for (Booking booking : bookings) {
-            Booking2ItemDto.add(toItemBookingDto(booking));
+            booking2ItemDtos.add(toItemBookingDto(booking));
         }
-        return Booking2ItemDto;
+        return booking2ItemDtos;
     }
 }

@@ -39,12 +39,12 @@ public class CommentMapper {
     }
 
     public List<CommentDto> mapToCommentDto(Iterable<Comment> comments) {
-        List<CommentDto> CommentDto = new ArrayList<>();
+        List<CommentDto> commentDtos = new ArrayList<>();
         for (Comment comment : comments) {
-            CommentDto.add(toCommentDto(comment));
+            commentDtos.add(toCommentDto(comment));
         }
-        if (!CommentDto.isEmpty()) {
-            return CommentDto;
+        if (!commentDtos.isEmpty()) {
+            return commentDtos;
         } else return null;
     }
 }
