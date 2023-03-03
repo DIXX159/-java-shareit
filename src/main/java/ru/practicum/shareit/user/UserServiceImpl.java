@@ -18,10 +18,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    public User createUser(User user) throws ValidationException {
+    public User createUser(User user) throws ValidationException, ThrowableException {
         if (user.getEmail() != null) {
-            userRepository.save(user);
-            return userRepository.findUserByEmail(user.getEmail());
+            try {
+                userRepository.save(user);
+                return userRepository.findUserByEmail(user.getEmail());
+            } catch (Throwable e) {
+                throw new ThrowableException("Email уже зарегистрирован");
+            }
         } else throw new ValidationException("Не указан e-mail");
     }
 

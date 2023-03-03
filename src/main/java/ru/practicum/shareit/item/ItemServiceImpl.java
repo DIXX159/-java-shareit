@@ -42,6 +42,9 @@ public class ItemServiceImpl implements ItemService {
         if (userId > 0) {
             if (item.getAvailable() != null) {
                 if (userRepository.findUserById(userId) != null) {
+                    if (itemRepository.findItemByNameAndDescription(item.getName(), item.getDescription()) != null) {
+                        throw new ThrowableException("Вещь уже существует");
+                    }
                     item.setOwner(userRepository.findUserById(userId).getId());
                     itemRepository.save(item);
                     return itemMapper.toItemDto(itemRepository.findItemByNameAndDescription(item.getName(), item.getDescription()));
@@ -75,7 +78,7 @@ public class ItemServiceImpl implements ItemService {
                 if (item.getRequest() == null) {
                     item.setRequest(updateItem.getRequest());
                 }
-                itemRepository.updateItem(itemId, item.getName(), item.getDescription(), item.getAvailable().toString(), item.getOwner(), 0L);
+                itemRepository.updateItem(itemId, item.getName(), item.getDescription(), item.getAvailable(), item.getOwner(), 0L);
                 itemRepository.saveAndFlush(item);
                 return itemMapper.toItemDto(itemRepository.findItemByIdOrderById(updateItem.getId()));
             } else throw new NotFoundException("Пользователь не является владельцем");
@@ -116,21 +119,11 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> searchItem(String text) {
-        List<ItemDto> searchingItems = new ArrayList<>();
         if (!text.isEmpty()) {
-            for (long i = 1; i <= itemRepository.findAll().size(); i++) {
-                Item item = itemRepository.findItemByIdOrderById(i);
-                if (item.getAvailable() && item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                        item.getAvailable() && item.getDescription().toLowerCase().contains(text.toLowerCase())) {
-                    searchingItems.add(itemMapper.toItemDto(item));
-                }
-            }
+            List<Item> it = itemRepository.searchItemsByAvailableAndAndDescriptionContainsIgnoreCase(true, text.toLowerCase());
+            return itemMapper.mapToItemDto(itemRepository.searchItemsByAvailableAndAndDescriptionContainsIgnoreCase(true, text.toLowerCase()));
         }
-        for (ItemDto i : searchingItems) {
-            addBookings(bookingMapper.mapToItemBooking2Dto(bookingRepository.findAllBookingsByItem(i.getId())), i,
-                    commentMapper.mapToCommentDto(commentRepository.findCommentsByItem(i.getId())), i.getOwner());
-        }
-        return searchingItems;
+        return new ArrayList<>();
     }
 
     @Override

@@ -29,8 +29,13 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "owner_id = :owner_id, " +
             "request_id = :request_id " +
             "where id = :id", nativeQuery = true)
-    void updateItem(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("is_available") String available, @Param("owner_id") Long owner, @Param("request_id") Long request);
+    void updateItem(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("is_available") Boolean available, @Param("owner_id") Long owner, @Param("request_id") Long request);
 
     @Query(value = "select i.id, i.id, i.name, i.description, i.is_available, i.owner_id, i.request_id from items as i order by i.id", nativeQuery = true)
     List<Item> findAllItems();
+
+    @Query(value = "select * from items where description like ?1", nativeQuery = true)
+    List<Item> searchItems(String text);
+
+    List<Item> searchItemsByAvailableAndAndDescriptionContainsIgnoreCase(Boolean available, String text);
 }
