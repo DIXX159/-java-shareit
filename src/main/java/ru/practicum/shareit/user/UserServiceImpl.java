@@ -1,7 +1,7 @@
 package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.practicum.shareit.Constants;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ThrowableException;
@@ -9,67 +9,61 @@ import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    Long userIdGenerator = 1L;
-    HashMap<Long, User> users = new HashMap<>();
-    List<String> email = new ArrayList<>();
+    private final UserRepository userRepository;
 
-    @Override
-    public User createUser(User user) throws ThrowableException, ValidationException {
+    public User createUser(User user) throws ValidationException, ThrowableException {
         if (user.getEmail() != null) {
-            if (!email.contains(user.getEmail())) {
-                email.add(user.getEmail());
-                user.setId(userIdGenerator++);
-                users.put(user.getId(), user);
-                return user;
-            } else throw new ThrowableException(Constants.emailExist);
+            try {
+                userRepository.save(user);
+                return userRepository.findUserByEmail(user.getEmail());
+            } catch (Throwable e) {
+                throw new ThrowableException("Email уже зарегистрирован");
+            }
         } else throw new ValidationException("Не указан e-mail");
     }
 
     @Override
     public User updateUser(Long userId, User user) throws ThrowableException {
-        if (users.get(userId) != null) {
+        if (userRepository.findUserById(userId) != null) {
             user.setId(userId);
-            if (user.getEmail() == null || !email.contains(user.getEmail())) {
-                email.add(user.getEmail());
-                if (user.getEmail() != null) {
-                    email.remove(users.get(userId).getEmail());
-                }
+            User oldUser = userRepository.findUserById(userId);
+            if (user.getEmail() == null || !userRepository.findAllEmail().contains(user.getEmail()) || Objects.equals(oldUser.getEmail(), user.getEmail())) {
                 if (user.getEmail() == null) {
-                    user.setEmail(users.get(userId).getEmail());
+                    user.setEmail(oldUser.getEmail());
                 }
                 if (user.getName() == null) {
-                    user.setName(users.get(userId).getName());
+                    user.setName(oldUser.getName());
                 }
-                users.put(userId, user);
-                return users.get(userId);
+                userRepository.updateUser(userId, user.getName(), user.getEmail());
+                userRepository.saveAndFlush(user);
+                return userRepository.findUserById(user.getId());
             } else throw new ThrowableException(Constants.emailExist);
         } else throw new NotFoundException(Constants.userNotFound);
     }
 
     @Override
     public List<User> getAllUsers() {
-        return new ArrayList<>(users.values());
+        return new ArrayList<>(userRepository.findAll());
     }
 
     @Override
     public User getUserById(Long userId) {
-        if (users.get(userId) != null) {
-            return users.get(userId);
+        if (userRepository.findUserById(userId) != null) {
+            return userRepository.findUserById(userId);
         } else throw new NotFoundException(Constants.userNotFound);
     }
 
     @Override
     public void deleteUser(long userId) {
-        if (users.get(userId) != null) {
-            email.remove(users.get(userId).getEmail());
-            users.remove(userId);
+        if (userRepository.findUserById(userId) != null) {
+            userRepository.deleteById(userId);
         } else throw new NotFoundException(Constants.userNotFound);
     }
 }

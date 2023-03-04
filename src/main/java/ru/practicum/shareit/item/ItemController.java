@@ -3,6 +3,9 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.comment.model.Comment;
+import ru.practicum.shareit.comment.model.CommentDto;
+import ru.practicum.shareit.comment.model.CommentMapper;
 import ru.practicum.shareit.exception.ThrowableException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
@@ -21,9 +24,10 @@ public class ItemController {
 
     private final ItemService itemService;
     private final ItemMapper itemMapper;
+    private final CommentMapper commentMapper;
 
     @PostMapping
-    public Item createItem(@RequestBody @Valid ItemDto itemDto, HttpServletRequest request) throws Throwable {
+    public ItemDto createItem(@RequestBody @Valid ItemDto itemDto, HttpServletRequest request) throws Throwable {
         log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), itemDto);
         Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
         Item item = itemMapper.toEntity(itemDto);
@@ -31,34 +35,42 @@ public class ItemController {
     }
 
     @GetMapping(value = "/{itemId}")
-    public Item getItemById(@PathVariable Long itemId, HttpServletRequest request) {
+    public ItemDto getItemById(@PathVariable Long itemId, HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        return itemService.getItemById(itemId);
+        Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
+        return itemService.getItemById(itemId, userId);
     }
 
     @GetMapping
-    public List<Item> getAllItemsByUserId(HttpServletRequest request) {
+    public List<ItemDto> getAllItemsByUserId(HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
         Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
         return itemService.getAllItemsByUserId(userId);
     }
 
     @GetMapping(value = "/search")
-    public List<Item> searchItem(HttpServletRequest request, @RequestParam String text) {
+    public List<ItemDto> searchItem(HttpServletRequest request, @RequestParam String text) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
         return itemService.searchItem(text);
     }
 
     @PatchMapping(value = "/{itemId}")
-    public Item updateItem(@RequestBody ItemDto itemDto, HttpServletRequest request, @PathVariable Long itemId) throws ValidationException, ThrowableException {
+    public ItemDto updateItem(@RequestBody ItemDto itemDto, HttpServletRequest request, @PathVariable Long itemId) throws ValidationException, ThrowableException {
         Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
-        Item item = itemMapper.toEntity(itemDto);
-        return itemService.updateItem(itemId, item, userId);
+        return itemService.updateItem(itemId, itemDto, userId);
     }
 
     @DeleteMapping("/{itemId}")
     public void deleteUser(@PathVariable long itemId, HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
         itemService.deleteItem(itemId);
+    }
+
+    @PostMapping(value = "/{itemId}/comment")
+    public CommentDto createComment(@RequestBody @Valid CommentDto commentDto, @PathVariable Long itemId, HttpServletRequest request) throws Throwable {
+        log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), commentDto);
+        Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
+        Comment comment = commentMapper.toEntity(commentDto);
+        return itemService.createComment(comment, itemId, userId);
     }
 }
