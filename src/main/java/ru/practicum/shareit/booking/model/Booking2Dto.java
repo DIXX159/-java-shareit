@@ -9,14 +9,13 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.FutureOrPresent;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class Booking2Dto implements Serializable {
+public class Booking2Dto {
     private Long id;
     @FutureOrPresent(message = "Неверная дата начала бронирования")
     private LocalDateTime start;
