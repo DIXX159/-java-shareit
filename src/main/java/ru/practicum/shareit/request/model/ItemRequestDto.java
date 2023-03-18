@@ -19,7 +19,7 @@ public class ItemRequestDto implements Serializable {
     private Long id;
     @NotBlank
     private String description;
-    private Long requestor;
+    private Long requester;
     private LocalDateTime created;
     List<ItemDto> items;
 }

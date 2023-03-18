@@ -43,7 +43,7 @@ class ItemRequestMapperTest {
 
         assertEquals(itemRequestDto.getId(), actualItemRequestDto.getId());
         assertEquals(itemRequestDto.getDescription(), actualItemRequestDto.getDescription());
-        assertEquals(itemRequestDto.getRequestor(), actualItemRequestDto.getRequestor());
+        assertEquals(itemRequestDto.getRequester(), actualItemRequestDto.getRequester());
         assertEquals(itemRequestDto.getCreated(), actualItemRequestDto.getCreated());
         assertEquals(itemRequestDto.getItems(), actualItemRequestDto.getItems());
     }
@@ -70,7 +70,7 @@ class ItemRequestMapperTest {
 
         assertEquals(itemRequestDto.getId(), actualItemRequestDtoList.get(0).getId());
         assertEquals(itemRequestDto.getDescription(), actualItemRequestDtoList.get(0).getDescription());
-        assertEquals(itemRequestDto.getRequestor(), actualItemRequestDtoList.get(0).getRequestor());
+        assertEquals(itemRequestDto.getRequester(), actualItemRequestDtoList.get(0).getRequester());
         assertEquals(itemRequestDto.getCreated(), actualItemRequestDtoList.get(0).getCreated());
         assertEquals(itemRequestDto.getItems(), actualItemRequestDtoList.get(0).getItems());
     }

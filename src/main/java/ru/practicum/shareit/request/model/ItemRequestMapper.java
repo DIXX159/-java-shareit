@@ -26,7 +26,7 @@ public class ItemRequestMapper {
         }
         ItemRequest itemRequest = new ItemRequest();
         itemRequest.setDescription(itemRequestDto.getDescription());
-        itemRequest.setRequestorId(itemRequestDto.getRequestor());
+        itemRequest.setRequestorId(itemRequestDto.getRequester());
         itemRequest.setCreated(LocalDateTime.now());
         return itemRequest;
     }

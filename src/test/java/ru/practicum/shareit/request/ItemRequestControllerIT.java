@@ -50,7 +50,7 @@ class ItemRequestControllerIT {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.description", is(requestDto.getDescription())))
-                .andExpect(jsonPath("$.requestor", is(requestDto.getRequestor().intValue())));
+                .andExpect(jsonPath("$.requestor", is(requestDto.getRequester().intValue())));
     }
 
     @Test
