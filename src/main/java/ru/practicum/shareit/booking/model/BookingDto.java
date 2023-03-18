@@ -3,13 +3,14 @@ package ru.practicum.shareit.booking.model;
 import lombok.*;
 
 import javax.validation.constraints.FutureOrPresent;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class BookingDto {
+public class BookingDto implements Serializable {
     private Long id;
     @FutureOrPresent(message = "Неверная дата начала бронирования")
     private LocalDateTime start;

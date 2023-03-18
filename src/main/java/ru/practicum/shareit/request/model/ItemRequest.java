@@ -2,6 +2,7 @@ package ru.practicum.shareit.request.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.practicum.shareit.data.EntityData;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "requests")
 @Getter
 @Setter
-public class ItemRequest {
+public class ItemRequest extends EntityData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
