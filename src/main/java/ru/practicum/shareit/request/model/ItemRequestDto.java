@@ -21,5 +21,5 @@ public class ItemRequestDto implements Serializable {
     private String description;
     private Long requester;
     private LocalDateTime created;
-    List<ItemDto> items;
+    private List<ItemDto> items;
 }
