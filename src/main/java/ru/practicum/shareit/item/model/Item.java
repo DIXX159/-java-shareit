@@ -31,5 +31,5 @@ public class Item extends EntityData {
     @Column(name = "owner_id")
     private Long owner;
     @Column(name = "request_id")
-    private Long request;
+    private Long requestId;
 }

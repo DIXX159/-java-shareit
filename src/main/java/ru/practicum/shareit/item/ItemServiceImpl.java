@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.Constants;
 import ru.practicum.shareit.booking.BookingRepository;
@@ -18,7 +19,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.ItemDto;
 import ru.practicum.shareit.item.model.ItemMapper;
 import ru.practicum.shareit.user.UserRepository;
-import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -46,8 +46,7 @@ public class ItemServiceImpl implements ItemService {
                         throw new ThrowableException("Вещь уже существует");
                     }
                     item.setOwner(userRepository.findUserById(userId).getId());
-                    itemRepository.save(item);
-                    return itemMapper.toItemDto(itemRepository.findItemByNameAndDescription(item.getName(), item.getDescription()));
+                    return itemMapper.toItemDto(itemRepository.save(item));
                 }
                 throw new NotFoundException(Constants.userNotFound);
             } else throw new ValidationException("Отсутствует статус");
@@ -55,39 +54,39 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto updateItem(Long itemId, ItemDto itemDto, Long userId) throws ThrowableException {
-        Item item = itemMapper.toEntity(itemDto);
+    public ItemDto updateItem(Long itemId, Item item, Long userId) throws ThrowableException {
         if (userId > 0) {
             if (item.getId() == null) {
                 item.setId(itemId);
             }
             Item updateItem = itemRepository.findItemByIdOrderById(itemId);
-            if (Objects.equals(updateItem.getOwner(), userId)) {
-                if (item.getName() == null) {
-                    item.setName(updateItem.getName());
-                }
-                if (item.getDescription() == null) {
-                    item.setDescription(updateItem.getDescription());
-                }
-                if (item.getOwner() == null) {
-                    item.setOwner(userId);
-                }
-                if (item.getAvailable() == null) {
-                    item.setAvailable(updateItem.getAvailable());
-                }
-                if (item.getRequest() == null) {
-                    item.setRequest(updateItem.getRequest());
-                }
-                itemRepository.updateItem(itemId, item.getName(), item.getDescription(), item.getAvailable(), item.getOwner(), 0L);
-                itemRepository.saveAndFlush(item);
-                return itemMapper.toItemDto(itemRepository.findItemByIdOrderById(updateItem.getId()));
-            } else throw new NotFoundException("Пользователь не является владельцем");
+            if(updateItem != null) {
+                if (Objects.equals(updateItem.getOwner(), userId)) {
+                    if (item.getName() == null) {
+                        item.setName(updateItem.getName());
+                    }
+                    if (item.getDescription() == null) {
+                        item.setDescription(updateItem.getDescription());
+                    }
+                    if (item.getOwner() == null) {
+                        item.setOwner(userId);
+                    }
+                    if (item.getAvailable() == null) {
+                        item.setAvailable(updateItem.getAvailable());
+                    }
+                    if (item.getRequestId() == null) {
+                        item.setRequestId(updateItem.getRequestId());
+                    }
+                    itemRepository.updateItem(itemId, item.getName(), item.getDescription(), item.getAvailable(), item.getOwner(), 0L);
+                    return itemMapper.toItemDto(itemRepository.save(item));
+                } else throw new NotFoundException("Пользователь не является владельцем");
+            } else throw new NotFoundException(Constants.itemNotFound);
         } else throw new ThrowableException(Constants.idNotFound);
     }
 
     @Override
-    public List<ItemDto> getAllItemsByUserId(Long userId) {
-        List<Item> itemsByUserId = itemRepository.findAllByOwnerOrderById(userId);
+    public List<ItemDto> getAllItemsByUserId(Long userId, Integer from, Integer size) {
+        List<Item> itemsByUserId = itemRepository.findAllByOwnerOrderById(userId, PageRequest.of(from, size));
         if (!itemsByUserId.isEmpty()) {
             List<ItemDto> items = itemMapper.mapToItemDto(itemsByUserId);
             for (ItemDto i : items) {
@@ -118,9 +117,9 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> searchItem(String text) {
+    public List<ItemDto> searchItem(String text, Integer from, Integer size) {
         if (!text.isEmpty()) {
-            return itemMapper.mapToItemDto(itemRepository.searchItemsByAvailableAndAndDescriptionContainsIgnoreCase(true, text.toLowerCase()));
+            return itemMapper.mapToItemDto(itemRepository.searchItemsByAvailableAndDescriptionContainsIgnoreCase(true, text.toLowerCase(), PageRequest.of(from, size)));
         }
         return new ArrayList<>();
     }
@@ -134,13 +133,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentDto createComment(Comment comment, Long itemId, Long userId) throws ValidationException {
-        Item item = itemRepository.findById(itemId)
+        itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException(Constants.itemNotFound));
-        User user = userRepository.findById(userId)
+        userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(Constants.userNotFound));
-        Booking booking = bookingRepository.findBookingByBookerAndItemAndStartBefore(userId, itemId, LocalDateTime.now())
+        List<Booking> bookings = bookingRepository.findBookingsByBookerAndItemAndStartBeforeAndEndBefore(userId, itemId, LocalDateTime.now().withNano(0), LocalDateTime.now().withNano(0))
                 .orElseThrow(() -> new ValidationException(Constants.bookingNotFound));
-        if (booking.getEnd().isBefore(LocalDateTime.now())) {
+        if (!bookings.isEmpty()) {
             comment.setItem(itemId);
             comment.setAuthor(userId);
             comment.setCreated(LocalDateTime.now());
@@ -153,10 +152,12 @@ public class ItemServiceImpl implements ItemService {
         if (!bookings.isEmpty()) {
             for (int i = 0; i < bookings.size(); i++) {
                 if (!Objects.equals(bookings.get(i).getStatus(), "REJECTED")) {
-                    if (LocalDateTime.parse(bookings.get(i).getEnd()).isBefore(LocalDateTime.now())) {
+                    if (LocalDateTime.parse(bookings.get(i).getStart()).isBefore(LocalDateTime.now())) {
                         if (Objects.equals(item.getOwner(), userId)) {
                             item.setLastBooking(bookings.get(i));
-                            item.setNextBooking(bookings.get(i + 1));
+                            if(i < bookings.size() - 1) {
+                                item.setNextBooking(bookings.get(i + 1));
+                            }else {item.setNextBooking(null);}
                         }
                     }
                 }

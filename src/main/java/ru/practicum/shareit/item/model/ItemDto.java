@@ -21,7 +21,7 @@ public class ItemDto {
     @NotNull(message = "Отсутствует статус")
     private Boolean available;
     private Long owner;
-    private Long request;
+    private Long requestId;
     private Booking2ItemDto lastBooking;
     private Booking2ItemDto nextBooking;
     private List<CommentDto> comments;

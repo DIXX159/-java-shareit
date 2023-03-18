@@ -21,11 +21,11 @@ public class BookingMapper {
     public Booking2Dto toBookingDto(Booking booking) {
         return new Booking2Dto(
                 booking.getId(),
-                booking.getStart().toString(),
-                booking.getEnd().toString(),
+                booking.getStart(),
+                booking.getEnd(),
                 itemRepository.findItemByIdOrderById(booking.getItem()),
                 userRepository.findUserById(booking.getBooker()),
-                booking.getStatus().toString()
+                booking.getStatus()
         );
     }
 
@@ -48,8 +48,6 @@ public class BookingMapper {
         booking.setStart(bookingDto.getStart());
         booking.setEnd(bookingDto.getEnd());
         booking.setItem(bookingDto.getItemId());
-        booking.setBooker(bookingDto.getBookerId());
-        booking.setStatus(bookingDto.getStatus());
         return booking;
     }
 

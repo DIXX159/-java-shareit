@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import ru.practicum.shareit.user.UserRepository;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class CommentMapper {
                 comment.getText(),
                 comment.getItem(),
                 userRepository.findUserById(comment.getAuthor()).getName(),
-                comment.getCreated().toString()
+                comment.getCreated()
         );
     }
 
@@ -34,17 +33,17 @@ public class CommentMapper {
         Comment comment = new Comment();
         comment.setText(commentDto.getText());
         comment.setItem(commentDto.getItem());
-        comment.setCreated(LocalDateTime.now());
+        comment.setCreated(commentDto.getCreated());
         return comment;
     }
 
     public List<CommentDto> mapToCommentDto(Iterable<Comment> comments) {
-        List<CommentDto> commentDtos = new ArrayList<>();
+        List<CommentDto> commentDtoList = new ArrayList<>();
         for (Comment comment : comments) {
-            commentDtos.add(toCommentDto(comment));
+            commentDtoList.add(toCommentDto(comment));
         }
-        if (!commentDtos.isEmpty()) {
-            return commentDtos;
+        if (!commentDtoList.isEmpty()) {
+            return commentDtoList;
         } else return null;
     }
 }
