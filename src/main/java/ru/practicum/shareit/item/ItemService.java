@@ -12,15 +12,15 @@ import java.util.List;
 public interface ItemService {
     ItemDto createItem(Item item, Long userId) throws Throwable;
 
-    ItemDto updateItem(Long itemId, ItemDto item, Long userId) throws ValidationException, ThrowableException;
+    ItemDto updateItem(Long itemId, Item item, Long userId) throws ValidationException, ThrowableException;
 
-    List<ItemDto> getAllItemsByUserId(Long userId);
+    List<ItemDto> getAllItemsByUserId(Long userId, Integer from, Integer size);
 
     List<ItemDto> getAllItems();
 
     ItemDto getItemById(Long id, Long userId);
 
-    List<ItemDto> searchItem(String text);
+    List<ItemDto> searchItem(String text, Integer from, Integer size);
 
     void deleteItem(long userId);
 

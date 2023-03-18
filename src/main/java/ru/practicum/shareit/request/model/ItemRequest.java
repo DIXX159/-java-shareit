@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "requests")
@@ -20,4 +21,5 @@ public class ItemRequest {
     private String description;
     @Column(name = "requestor_id")
     private Long requestorId;
+    private LocalDateTime created;
 }

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +19,11 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Item findItemByIdOrderById(Long id);
 
+    List<Item> findAllByOwnerOrderById(Long userId, Pageable pageable);
+
     List<Item> findAllByOwnerOrderById(Long userId);
+
+    List<Item> findItemsByRequestId(Long requestId);
 
     @Transactional
     @Modifying
@@ -29,13 +34,10 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "owner_id = :owner_id, " +
             "request_id = :request_id " +
             "where id = :id", nativeQuery = true)
-    void updateItem(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("is_available") Boolean available, @Param("owner_id") Long owner, @Param("request_id") Long request);
+    void updateItem(@Param("id") Long id, @Param("name") String name, @Param("description") String description, @Param("is_available") Boolean available, @Param("owner_id") Long owner, @Param("request_id") Long requestId);
 
     @Query(value = "select i.id, i.id, i.name, i.description, i.is_available, i.owner_id, i.request_id from items as i order by i.id", nativeQuery = true)
     List<Item> findAllItems();
 
-    @Query(value = "select * from items where description like ?1", nativeQuery = true)
-    List<Item> searchItems(String text);
-
-    List<Item> searchItemsByAvailableAndAndDescriptionContainsIgnoreCase(Boolean available, String text);
+    List<Item> searchItemsByAvailableAndDescriptionContainsIgnoreCase(Boolean available, String text, Pageable pageable);
 }

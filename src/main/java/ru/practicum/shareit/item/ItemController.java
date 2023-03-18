@@ -14,6 +14,8 @@ import ru.practicum.shareit.item.model.ItemMapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -42,22 +44,27 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getAllItemsByUserId(HttpServletRequest request) {
+    public List<ItemDto> getAllItemsByUserId(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                             @Positive @RequestParam(name = "size", defaultValue = "20") Integer size,
+                                             HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
         Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
-        return itemService.getAllItemsByUserId(userId);
+        return itemService.getAllItemsByUserId(userId, from, size);
     }
 
     @GetMapping(value = "/search")
-    public List<ItemDto> searchItem(HttpServletRequest request, @RequestParam String text) {
+    public List<ItemDto> searchItem(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                    @Positive @RequestParam(name = "size", defaultValue = "20") Integer size,
+                                    HttpServletRequest request, @RequestParam String text) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        return itemService.searchItem(text);
+        return itemService.searchItem(text, from, size);
     }
 
     @PatchMapping(value = "/{itemId}")
     public ItemDto updateItem(@RequestBody ItemDto itemDto, HttpServletRequest request, @PathVariable Long itemId) throws ValidationException, ThrowableException {
         Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
-        return itemService.updateItem(itemId, itemDto, userId);
+        Item item = itemMapper.toEntity(itemDto);
+        return itemService.updateItem(itemId, item, userId);
     }
 
     @DeleteMapping("/{itemId}")

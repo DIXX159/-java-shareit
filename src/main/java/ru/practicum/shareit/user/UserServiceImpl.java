@@ -7,8 +7,9 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ThrowableException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.model.UserDto;
+import ru.practicum.shareit.user.model.UserMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,12 +18,14 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public User createUser(User user) throws ValidationException, ThrowableException {
+    public UserDto createUser(UserDto userDto) throws ValidationException, ThrowableException {
+        User user = userMapper.toEntity(userDto);
         if (user.getEmail() != null) {
             try {
-                userRepository.save(user);
-                return userRepository.findUserByEmail(user.getEmail());
+                User save = userRepository.save(user);
+                return userMapper.toUserDto(save);
             } catch (Throwable e) {
                 throw new ThrowableException("Email уже зарегистрирован");
             }
@@ -30,11 +33,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long userId, User user) throws ThrowableException {
+    public UserDto updateUser(Long userId, UserDto userDto) throws ThrowableException {
+        User user = userMapper.toEntity(userDto);
         if (userRepository.findUserById(userId) != null) {
             user.setId(userId);
             User oldUser = userRepository.findUserById(userId);
-            if (user.getEmail() == null || !userRepository.findAllEmail().contains(user.getEmail()) || Objects.equals(oldUser.getEmail(), user.getEmail())) {
+            List<String> emails = userRepository.findAllEmail();
+            if (user.getEmail() == null || !emails.contains(user.getEmail()) || Objects.equals(oldUser.getEmail(), user.getEmail())) {
                 if (user.getEmail() == null) {
                     user.setEmail(oldUser.getEmail());
                 }
@@ -42,21 +47,20 @@ public class UserServiceImpl implements UserService {
                     user.setName(oldUser.getName());
                 }
                 userRepository.updateUser(userId, user.getName(), user.getEmail());
-                userRepository.saveAndFlush(user);
-                return userRepository.findUserById(user.getId());
+                return userMapper.toUserDto(userRepository.save(user));
             } else throw new ThrowableException(Constants.emailExist);
         } else throw new NotFoundException(Constants.userNotFound);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return new ArrayList<>(userRepository.findAll());
+    public List<UserDto> getAllUsers() {
+        return userMapper.mapToUserDto(userRepository.findAll());
     }
 
     @Override
-    public User getUserById(Long userId) {
+    public UserDto getUserById(Long userId) {
         if (userRepository.findUserById(userId) != null) {
-            return userRepository.findUserById(userId);
+            return userMapper.toUserDto(userRepository.findUserById(userId));
         } else throw new NotFoundException(Constants.userNotFound);
     }
 
