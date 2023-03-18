@@ -6,14 +6,13 @@ import ru.practicum.shareit.comment.model.CommentDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class ItemDto implements Serializable {
+public class ItemDto {
     private Long id;
     @NotBlank(message = "Имя не должно быть пустым")
     private String name;

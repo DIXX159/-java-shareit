@@ -6,14 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class CommentDto implements Serializable {
+public class CommentDto {
     Long id;
     @NotBlank(message = "Комментарий не должен быть пустым")
     private String text;

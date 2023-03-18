@@ -7,7 +7,6 @@ import lombok.Setter;
 import ru.practicum.shareit.item.model.ItemDto;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ItemRequestDto implements Serializable {
+public class ItemRequestDto {
     private Long id;
     @NotBlank
     private String description;
