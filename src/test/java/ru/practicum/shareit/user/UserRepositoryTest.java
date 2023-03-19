@@ -42,7 +42,7 @@ class UserRepositoryTest {
     void findUserByEmail() {
         User findUser = userRepository.findUserByEmail("user2@mail.ru");
 
-        assertEquals(userRepository.findAll().size(), 2);
+        assertEquals(2, userRepository.findAll().size());
         assertEquals(user2.getEmail(), findUser.getEmail());
     }
 
@@ -50,7 +50,7 @@ class UserRepositoryTest {
     void findUserById() {
         User findUser = userRepository.findUserById(2L);
 
-        assertEquals(userRepository.findAll().size(), 2);
+        assertEquals(2, userRepository.findAll().size());
         assertEquals(user2.getEmail(), findUser.getEmail());
     }
 
@@ -58,7 +58,7 @@ class UserRepositoryTest {
     void findById() {
         Optional<User> findUser = userRepository.findById(2L);
 
-        assertEquals(userRepository.findAll().size(), 2);
+        assertEquals(2, userRepository.findAll().size());
         assertEquals(user2.getEmail(), findUser.get().getEmail());
     }
 
@@ -66,7 +66,7 @@ class UserRepositoryTest {
     void findByEmail() {
         Optional<User> findUser = userRepository.findByEmail("user2@mail.ru");
 
-        assertEquals(userRepository.findAll().size(), 2);
+        assertEquals(2, userRepository.findAll().size());
         assertEquals(user2.getEmail(), findUser.get().getEmail());
     }
 
@@ -74,8 +74,8 @@ class UserRepositoryTest {
     void findAllEmail() {
         List<String> emails = userRepository.findAllEmail();
 
-        assertEquals(userRepository.findAll().size(), 2);
-        assertEquals(emails.size(), 2);
+        assertEquals(2, userRepository.findAll().size());
+        assertEquals(2, emails.size());
         assertEquals(user2.getEmail(), emails.get(1));
     }
 
@@ -88,7 +88,7 @@ class UserRepositoryTest {
 
         List<User> findUsers = userRepository.findAll();
 
-        assertEquals(userRepository.findAll().size(), 2);
+        assertEquals(2, userRepository.findAll().size());
         assertEquals(findUsers.size(), 2);
         assertEquals(user2.getId(), findUsers.get(1).getId());
         assertEquals("name3", findUsers.get(1).getName());

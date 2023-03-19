@@ -45,7 +45,7 @@ class RequestRepositoryTest {
     void findItemRequestByDescription() {
         ItemRequest findRequest = requestRepository.findItemRequestByDescription("desc2");
 
-        assertEquals(requestRepository.findAll().size(), 2);
+        assertEquals(2, requestRepository.findAll().size());
         assertEquals(request2.getDescription(), findRequest.getDescription());
     }
 
@@ -53,8 +53,8 @@ class RequestRepositoryTest {
     void findItemRequestsByRequestorId() {
         List<ItemRequest> findRequests = requestRepository.findItemRequestsByRequestorId(2L);
 
-        assertEquals(requestRepository.findAll().size(), 2);
-        assertEquals(findRequests.size(), 1);
+        assertEquals(2, requestRepository.findAll().size());
+        assertEquals(1, findRequests.size());
         assertEquals(request2.getDescription(), findRequests.get(0).getDescription());
     }
 
@@ -62,7 +62,7 @@ class RequestRepositoryTest {
     void findItemRequestById() {
         ItemRequest findRequest = requestRepository.findItemRequestById(2L);
 
-        assertEquals(requestRepository.findAll().size(), 2);
+        assertEquals(2, requestRepository.findAll().size());
         assertEquals(request2.getDescription(), findRequest.getDescription());
     }
 
@@ -70,8 +70,8 @@ class RequestRepositoryTest {
     void findItemRequestsByRequestorIdIsNot() {
         List<ItemRequest> findRequests = requestRepository.findItemRequestsByRequestorIdIsNot(2L, PageRequest.of(0, 20));
 
-        assertEquals(requestRepository.findAll().size(), 2);
-        assertEquals(findRequests.size(), 1);
+        assertEquals(2, requestRepository.findAll().size());
+        assertEquals(1, findRequests.size());
         assertEquals(request1.getDescription(), findRequests.get(0).getDescription());
     }
 }

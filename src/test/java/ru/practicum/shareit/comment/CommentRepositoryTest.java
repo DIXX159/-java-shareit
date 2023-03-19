@@ -20,6 +20,7 @@ class CommentRepositoryTest {
     CommentRepository commentRepository;
 
     Comment comment;
+    Comment comment2;
 
     @BeforeEach
     public void addBookings() {
@@ -31,38 +32,30 @@ class CommentRepositoryTest {
         comment.setAuthor(1L);
         comment.setCreated(LocalDateTime.now());
         commentRepository.save(comment);
-    }
 
-    @Test
-    void findByItemAndAuthor() {
-        Comment comment2 = new Comment();
+        comment2 = new Comment();
         comment2.setId(2L);
         comment2.setText("comment2");
         comment2.setItem(1L);
         comment2.setAuthor(2L);
         comment2.setCreated(LocalDateTime.now());
         commentRepository.save(comment2);
+    }
 
+    @Test
+    void findByItemAndAuthor() {
         Comment findComment = commentRepository.findByItemAndAuthor(1L, 1L);
 
-        assertEquals(commentRepository.findAll().size(), 2);
+        assertEquals(2, commentRepository.findAll().size());
         assertEquals(comment.getText(), findComment.getText());
     }
 
     @Test
     void findCommentsByItem() {
-        Comment comment2 = new Comment();
-        comment2.setId(2L);
-        comment2.setText("comment2");
-        comment2.setItem(1L);
-        comment2.setAuthor(2L);
-        comment2.setCreated(LocalDateTime.now());
-        commentRepository.save(comment2);
-
         List<Comment> commentsByItem = commentRepository.findCommentsByItem(1L);
 
-        assertEquals(commentRepository.findAll().size(), 2);
-        assertEquals(commentsByItem.size(), 2);
+        assertEquals(2, commentRepository.findAll().size());
+        assertEquals(2, commentsByItem.size());
         assertEquals(comment2.getText(), commentsByItem.get(1).getText());
     }
 }
