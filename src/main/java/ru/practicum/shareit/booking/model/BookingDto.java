@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking.model;
 
 import lombok.*;
-import ru.practicum.shareit.booking.enums.BookingStatus;
 
 import javax.validation.constraints.FutureOrPresent;
 import java.time.LocalDateTime;
@@ -18,5 +17,5 @@ public class BookingDto {
     private LocalDateTime end;
     private Long itemId;
     private Long bookerId;
-    private BookingStatus status;
+    private String status;
 }
