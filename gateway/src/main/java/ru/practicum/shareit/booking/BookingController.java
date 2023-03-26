@@ -23,51 +23,51 @@ public class BookingController {
     private final BookingClient bookingClient;
 
     @PostMapping
-    public ResponseEntity<Object> createBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                @RequestBody @Valid BookingDto bookingDto,
+    public ResponseEntity<Object> createBooking(@RequestBody @Valid BookingDto bookingDto,
                                                 HttpServletRequest request) {
         log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), bookingDto);
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return bookingClient.createBooking(bookingDto, userId);
     }
 
     @PatchMapping(value = "/{bookingId}")
-    public ResponseEntity<Object> bookingApproved(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                  @PathVariable Long bookingId,
+    public ResponseEntity<Object> bookingApproved(@PathVariable Long bookingId,
                                                   @RequestParam String approved,
                                                   HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return bookingClient.updateApproving(bookingId, userId, approved);
     }
 
     @GetMapping(value = "/{bookingId}")
-    public ResponseEntity<Object> getBookingById(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                 @PathVariable Long bookingId,
+    public ResponseEntity<Object> getBookingById(@PathVariable Long bookingId,
                                                  HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return bookingClient.getBookingById(bookingId, userId);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getBookingByUser(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                   @RequestParam(defaultValue = "all") String state,
+    public ResponseEntity<Object> getBookingByUser(@RequestParam(defaultValue = "all") String state,
                                                    @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                    @Positive @RequestParam(name = "size", defaultValue = "20") Integer size,
                                                    HttpServletRequest request) {
         BookingStatus stateParam = BookingStatus.from(state)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + state));
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return bookingClient.getAllBookingsByUserId(stateParam, userId, from, size);
     }
 
     @GetMapping(value = "/owner")
-    public ResponseEntity<Object> getBookingItemsByUser(@RequestHeader("X-Sharer-User-Id") long ownerId,
-                                                        @RequestParam(defaultValue = "all") String state,
+    public ResponseEntity<Object> getBookingItemsByUser(@RequestParam(defaultValue = "all") String state,
                                                         @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                         @Positive @RequestParam(name = "size", defaultValue = "20") Integer size,
                                                         HttpServletRequest request) {
         BookingStatus stateParam = BookingStatus.from(state)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + state));
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
+        long ownerId = request.getIntHeader("X-Sharer-User-Id");
         return bookingClient.getAllBookingsItemsByUserId(stateParam, ownerId, from, size);
     }
 }

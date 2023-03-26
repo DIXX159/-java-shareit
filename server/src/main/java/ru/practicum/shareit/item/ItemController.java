@@ -25,14 +25,14 @@ public class ItemController {
     @PostMapping
     public ItemDto createItem(@RequestBody @Valid ItemDto itemDto, HttpServletRequest request) throws Throwable {
         log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), itemDto);
-        Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return itemService.createItem(itemDto, userId);
     }
 
     @GetMapping(value = "/{itemId}")
     public ItemDto getItemById(@PathVariable Long itemId, HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return itemService.getItemById(itemId, userId);
     }
 
@@ -41,7 +41,7 @@ public class ItemController {
                                              @Positive @RequestParam(name = "size", defaultValue = "20") Integer size,
                                              HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return itemService.getAllItemsByUserId(userId, from, size);
     }
 
@@ -55,7 +55,7 @@ public class ItemController {
 
     @PatchMapping(value = "/{itemId}")
     public ItemDto updateItem(@RequestBody ItemDto itemDto, HttpServletRequest request, @PathVariable Long itemId) throws ValidationException, ThrowableException {
-        Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return itemService.updateItem(itemId, itemDto, userId);
     }
 
@@ -68,7 +68,7 @@ public class ItemController {
     @PostMapping(value = "/{itemId}/comment")
     public CommentDto createComment(@RequestBody @Valid CommentDto commentDto, @PathVariable Long itemId, HttpServletRequest request) throws Throwable {
         log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), commentDto);
-        Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return itemService.createComment(commentDto, itemId, userId);
     }
 }

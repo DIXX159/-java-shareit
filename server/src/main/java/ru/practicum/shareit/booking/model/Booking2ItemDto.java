@@ -1,20 +1,19 @@
 package ru.practicum.shareit.booking.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.item.model.Item;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Booking2ItemDto {
-    private Long id;
-    private String start;
-    private String end;
-    private Item item;
-    private Long bookerId;
-    private String status;
+    Long id;
+    String start;
+    String end;
+    Item item;
+    Long bookerId;
+    String status;
 }

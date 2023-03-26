@@ -1,7 +1,9 @@
 package ru.practicum.shareit.request.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.data.EntityData;
 
 import javax.persistence.*;
@@ -12,15 +14,16 @@ import java.time.LocalDateTime;
 @Table(name = "requests")
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequest extends EntityData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
-    @NotBlank
+    Long id;
+    @NotBlank(message = "Описание не должно быть пустым")
     @Column(name = "description")
-    private String description;
+    String description;
     @Column(name = "requestor_id")
-    private Long requestorId;
-    private LocalDateTime created;
+    Long requestorId;
+    LocalDateTime created;
 }

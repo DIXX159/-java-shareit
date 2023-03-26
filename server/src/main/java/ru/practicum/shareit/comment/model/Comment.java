@@ -1,7 +1,9 @@
 package ru.practicum.shareit.comment.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.data.EntityData;
 
 import javax.persistence.*;
@@ -12,18 +14,19 @@ import java.time.LocalDateTime;
 @Table(name = "comments")
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Comment extends EntityData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
-    @NotBlank
+    Long id;
+    @NotBlank(message = "Комментарий не должен быть пустым")
     @Column(name = "text")
-    private String text;
+    String text;
     @Column(name = "item_id")
-    private Long item;
+    Long item;
     @Column(name = "author_id")
-    private Long author;
+    Long author;
     @Column(name = "created")
-    private LocalDateTime created;
+    LocalDateTime created;
 }

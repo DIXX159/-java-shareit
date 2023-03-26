@@ -23,46 +23,46 @@ public class ItemController {
     private final ItemClient itemClient;
 
     @PostMapping
-    public ResponseEntity<Object> createItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                                             @RequestBody @Valid ItemDto itemDto,
+    public ResponseEntity<Object> createItem(@RequestBody @Valid ItemDto itemDto,
                                              HttpServletRequest request) {
         log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), itemDto);
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return itemClient.createItem(itemDto, userId);
     }
 
     @GetMapping(value = "/{itemId}")
-    public ResponseEntity<Object> getItemById(@RequestHeader("X-Sharer-User-Id") long userId,
-                                              @PathVariable Long itemId,
+    public ResponseEntity<Object> getItemById(@PathVariable Long itemId,
                                               HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return itemClient.getItemById(itemId, userId);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllItemsByUserId(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                      @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+    public ResponseEntity<Object> getAllItemsByUserId(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                       @Positive @RequestParam(name = "size", defaultValue = "20") Integer size,
                                                       HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return itemClient.getAllItemsByUserId(userId, from, size);
     }
 
     @GetMapping(value = "/search")
-    public ResponseEntity<Object> searchItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                                             @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+    public ResponseEntity<Object> searchItem(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                              @Positive @RequestParam(name = "size", defaultValue = "20") Integer size,
                                              HttpServletRequest request,
                                              @RequestParam String text) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return itemClient.searchItem(text, userId, from, size);
     }
 
     @PatchMapping(value = "/{itemId}")
-    public ResponseEntity<Object> updateItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                                             @RequestBody ItemDto itemDto,
+    public ResponseEntity<Object> updateItem(@RequestBody ItemDto itemDto,
                                              HttpServletRequest request,
                                              @PathVariable Long itemId) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return itemClient.updateItem(itemId, itemDto, userId);
     }
 
@@ -73,11 +73,11 @@ public class ItemController {
     }
 
     @PostMapping(value = "/{itemId}/comment")
-    public ResponseEntity<Object> createComment(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                @RequestBody @Valid CommentDto commentDto,
+    public ResponseEntity<Object> createComment(@RequestBody @Valid CommentDto commentDto,
                                                 @PathVariable Long itemId,
                                                 HttpServletRequest request) {
         log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), commentDto);
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return itemClient.createComment(commentDto, itemId, userId);
     }
 }

@@ -20,34 +20,34 @@ public class ItemRequestController {
     private final RequestClient requestClient;
 
     @PostMapping
-    public ResponseEntity<Object> createRequest(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                @RequestBody @Valid ItemRequestDto itemRequestDto,
+    public ResponseEntity<Object> createRequest(@RequestBody @Valid ItemRequestDto itemRequestDto,
                                                 HttpServletRequest request) {
         log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), itemRequestDto);
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return requestClient.createRequest(itemRequestDto, userId);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getRequestsByUser(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                    HttpServletRequest request) {
+    public ResponseEntity<Object> getRequestsByUser(HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return requestClient.getRequestsByUser(userId);
     }
 
     @GetMapping(value = "/{requestId}")
-    public ResponseEntity<Object> getRequestById(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                 @PathVariable Long requestId,
+    public ResponseEntity<Object> getRequestById(@PathVariable Long requestId,
                                                  HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return requestClient.getRequestById(requestId, userId);
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity<Object> getRequestsByAll(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                   @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+    public ResponseEntity<Object> getRequestsByAll(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                    @Positive @RequestParam(name = "size", defaultValue = "20") Integer size,
                                                    HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return requestClient.getRequestByAll(userId, from, size);
     }
 }

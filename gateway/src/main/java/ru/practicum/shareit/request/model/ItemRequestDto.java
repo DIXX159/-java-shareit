@@ -1,9 +1,7 @@
 package ru.practicum.shareit.request.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.item.model.ItemDto;
 
 import javax.validation.constraints.NotBlank;
@@ -14,11 +12,12 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequestDto {
-    private Long id;
-    @NotBlank
-    private String description;
-    private Long requester;
-    private LocalDateTime created;
-    private List<ItemDto> items;
+    Long id;
+    @NotBlank(message = "Нужно заполнить описание")
+    String description;
+    Long requester;
+    LocalDateTime created;
+    List<ItemDto> items;
 }

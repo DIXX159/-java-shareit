@@ -1,7 +1,9 @@
 package ru.practicum.shareit.user.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.data.EntityData;
 
 import javax.persistence.*;
@@ -11,14 +13,15 @@ import javax.validation.constraints.Email;
 @Table(name = "users")
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User extends EntityData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    Long id;
     @Column(name = "name")
-    private String name;
+    String name;
     @Email(message = "Не верный формат e-mail")
     @Column(name = "email")
-    private String email;
+    String email;
 }

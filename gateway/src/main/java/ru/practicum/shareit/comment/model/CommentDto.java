@@ -1,9 +1,7 @@
 package ru.practicum.shareit.comment.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -12,11 +10,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentDto {
     Long id;
     @NotBlank(message = "Комментарий не должен быть пустым")
-    private String text;
-    private Long item;
-    private String authorName;
-    private LocalDateTime created;
+    String text;
+    Long item;
+    String authorName;
+    LocalDateTime created;
 }

@@ -23,21 +23,21 @@ public class ItemRequestController {
     @PostMapping
     public ItemRequestDto createRequest(@RequestBody @Valid ItemRequestDto itemRequestDto, HttpServletRequest request) throws ValidationException {
         log.debug("Получен {} запрос {} тело запроса: {}", request.getMethod(), request.getRequestURI(), itemRequestDto);
-        Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return requestService.createRequest(itemRequestDto, userId);
     }
 
     @GetMapping
     public List<ItemRequestDto> getRequestsByUser(HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return requestService.getRequestsByUser(userId);
     }
 
     @GetMapping(value = "/{requestId}")
     public ItemRequestDto getRequestById(@PathVariable Long requestId, HttpServletRequest request) {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return requestService.getRequestById(requestId, userId);
     }
 
@@ -46,7 +46,7 @@ public class ItemRequestController {
                                                  @Positive @RequestParam(name = "size", defaultValue = "20") Integer size,
                                                  HttpServletRequest request) throws ValidationException {
         log.debug("Получен {} запрос {}", request.getMethod(), request.getRequestURI());
-        Long userId = (long) request.getIntHeader("X-Sharer-User-Id");
+        long userId = request.getIntHeader("X-Sharer-User-Id");
         return requestService.getRequestByAll(userId, from, size);
     }
 }

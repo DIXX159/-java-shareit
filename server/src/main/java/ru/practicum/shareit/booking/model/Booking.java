@@ -1,7 +1,9 @@
 package ru.practicum.shareit.booking.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.data.EntityData;
 
@@ -12,19 +14,20 @@ import java.time.LocalDateTime;
 @Table(name = "bookings")
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Booking extends EntityData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    Long id;
     @Column(name = "start_date")
-    private LocalDateTime start;
+    LocalDateTime start;
     @Column(name = "end_date")
-    private LocalDateTime end;
+    LocalDateTime end;
     @Column(name = "item_id")
-    private Long item;
+    Long item;
     @Column(name = "booker_id")
-    private Long booker;
+    Long booker;
     @Enumerated(EnumType.STRING)
-    private BookingStatus status;
+    BookingStatus status;
 }

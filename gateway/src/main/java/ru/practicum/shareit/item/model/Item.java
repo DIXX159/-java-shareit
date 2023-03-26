@@ -1,7 +1,9 @@
 package ru.practicum.shareit.item.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.data.EntityData;
 
 import javax.persistence.*;
@@ -13,23 +15,24 @@ import javax.validation.constraints.Positive;
 @Table(name = "items")
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Item extends EntityData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
-    @NotBlank
+    Long id;
+    @NotBlank(message = "Имя не должно быть пустым")
     @Column(name = "name")
-    private String name;
-    @NotBlank
+    String name;
+    @NotBlank(message = "Описание не должно быть пустым")
     @Column(name = "description")
-    private String description;
-    @NotNull
+    String description;
+    @NotNull(message = "Отсутствует статус")
     @Column(name = "is_available")
-    private Boolean available;
-    @Positive
+    Boolean available;
+    @Positive(message = "Неправильно указан владелец")
     @Column(name = "owner_id")
-    private Long owner;
+    Long owner;
     @Column(name = "request_id")
-    private Long requestId;
+    Long requestId;
 }

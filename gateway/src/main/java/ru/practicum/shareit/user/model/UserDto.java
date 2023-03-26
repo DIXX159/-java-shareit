@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.model;
 
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Email;
 
@@ -8,9 +9,10 @@ import javax.validation.constraints.Email;
 @AllArgsConstructor
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
-    private Long id;
-    private String name;
+    Long id;
+    String name;
     @Email(message = "Не верный формат e-mail")
-    private String email;
+    String email;
 }
